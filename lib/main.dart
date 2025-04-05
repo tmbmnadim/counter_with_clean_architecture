@@ -1,4 +1,5 @@
 import 'package:counter_pro/features/counter/presentation/pages/counter_view.dart';
+import 'package:counter_pro/features/logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -17,6 +18,9 @@ class MyApp extends StatelessWidget {
         BlocProvider<CounterBloc>(
           create: (_) => CounterBloc(),
         ),
+        BlocProvider(
+          create: (_) => LoggerCubit(),
+        )
       ],
       child: MaterialApp(
         title: 'Counter Pro',

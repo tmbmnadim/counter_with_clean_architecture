@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:counter_pro/features/counter/counter.dart';
+import 'package:counter_pro/features/logger/logger.dart';
 
 class CounterView extends StatelessWidget {
   const CounterView({super.key});
@@ -25,19 +26,51 @@ class CounterView extends StatelessWidget {
                 style: Theme.of(context).textTheme.headlineMedium,
               ),
               ElevatedButton(
-                onPressed: () => BlocProvider.of<CounterBloc>(context)
-                    .add(CounterIncrementPressed()),
+                onPressed: () {
+                  BlocProvider.of<CounterBloc>(context)
+                      .add(CounterIncrementPressed());
+
+                  BlocProvider.of<LoggerCubit>(context).createLog(Log(
+                    title: 'Counter Incremented',
+                    subtitle:
+                        'Current count: $countState\nNew count: ${countState + 1}',
+                    createdAt: DateTime.now(),
+                  ));
+                },
                 child: const Text('Increment'),
               ),
               ElevatedButton(
-                onPressed: () => BlocProvider.of<CounterBloc>(context)
-                    .add(CounterDecrementPressed()),
+                onPressed: () {
+                  BlocProvider.of<CounterBloc>(context)
+                      .add(CounterDecrementPressed());
+
+                  BlocProvider.of<LoggerCubit>(context).createLog(Log(
+                    title: 'Counter Decremented',
+                    subtitle:
+                        'Current count: $countState\nNew count: ${countState - 1}',
+                    createdAt: DateTime.now(),
+                  ));
+                },
                 child: const Text('Decrement'),
               ),
             ],
           ),
         );
       }),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+              builder: (context) {
+                return const LoggerPage();
+              },
+            ),
+          );
+        },
+        tooltip: 'See Logs',
+        child: const Icon(Icons.description),
+      ),
     );
   }
 }
