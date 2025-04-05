@@ -1,6 +1,7 @@
 class Log {
   final String? title;
   final String? subtitle;
+  final LogLevel? level;
   final DateTime? createdAt;
   final String? bloc;
   final String? details;
@@ -9,6 +10,7 @@ class Log {
   const Log({
     this.title,
     this.subtitle,
+    this.level = LogLevel.undefined,
     this.bloc,
     this.details,
     this.error,
@@ -18,6 +20,7 @@ class Log {
   Log copyWith({
     String? title,
     String? subtitle,
+    LogLevel? level,
     String? bloc,
     String? details,
     String? error,
@@ -26,6 +29,7 @@ class Log {
     return Log(
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
+      level: level ?? this.level,
       bloc: bloc ?? this.bloc,
       details: details ?? this.details,
       error: error ?? this.error,
@@ -33,3 +37,5 @@ class Log {
     );
   }
 }
+
+enum LogLevel { debug, info, warning, error, critical, undefined }

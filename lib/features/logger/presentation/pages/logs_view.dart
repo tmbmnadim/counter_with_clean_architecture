@@ -13,36 +13,43 @@ class ViewLogsPage extends StatelessWidget {
       appBar: AppBar(
         title: const Text('Logs'),
       ),
-      body: BlocBuilder<LoggerCubit, LoggerState>(builder: (context, logger) {
-        if (logger.logs.isEmpty) {
-          return const EmptyPlaceholder(
-            title: 'No logs available',
-            subtitle: 'You have not created any logs yet.',
-          );
-        }
-        return ListView.builder(
-          itemCount: logger.logs.length,
-          itemBuilder: (context, index) {
-            return Card(
-              margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-              child: ListTile(
-                leading:
-                    Text(logger.logs[index].createdAt?.toString() ?? 'N/A'),
-                title: Text(logger.logs[index].title ?? 'Log Entry $index'),
-                subtitle: Text("${logger.logs[index].subtitle}"),
-                onTap: () {
-                  // Handle log entry tap
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Tapped on ${logger.logs[index].title}'),
-                    ),
-                  );
-                },
+      body: BlocConsumer<LoggerCubit, LoggerState>(
+        listener: (context, state) {
+          if (state is LoggerError) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text(state.message ?? 'An error occurred'),
+                backgroundColor: Colors.red,
               ),
             );
-          },
-        );
-      }),
+          }
+        },
+        builder: (context, logger) {
+          if (logger.logs.isEmpty) {
+            return const EmptyPlaceholder(
+              title: 'No logs available',
+              subtitle: 'You have not created any logs yet.',
+            );
+          }
+          return ListView.builder(
+            itemCount: logger.logs.length,
+            itemBuilder: (context, index) {
+              return Card(
+                margin: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
+                child: ListTile(
+                  leading:
+                      Text(logger.logs[index].createdAt?.toString() ?? 'N/A'),
+                  title: Text(logger.logs[index].title ?? 'Log Entry $index'),
+                  subtitle: Text("${logger.logs[index].subtitle}"),
+                  onTap: () {
+                    context.read<LoggerCubit>().deleteLog(logger.logs[index]);
+                  },
+                ),
+              );
+            },
+          );
+        },
+      ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
           Navigator.push(
