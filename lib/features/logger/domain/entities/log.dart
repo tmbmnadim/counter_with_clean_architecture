@@ -1,4 +1,5 @@
 class Log {
+  final String? id;
   final String? title;
   final String? subtitle;
   final LogLevel? level;
@@ -8,6 +9,7 @@ class Log {
   final String? error;
 
   const Log({
+    required this.id,
     this.title,
     this.subtitle,
     this.level = LogLevel.undefined,
@@ -18,6 +20,7 @@ class Log {
   });
 
   Log copyWith({
+    String? id,
     String? title,
     String? subtitle,
     LogLevel? level,
@@ -27,6 +30,7 @@ class Log {
     DateTime? createdAt,
   }) {
     return Log(
+      id: id ?? this.id,
       title: title ?? this.title,
       subtitle: subtitle ?? this.subtitle,
       level: level ?? this.level,

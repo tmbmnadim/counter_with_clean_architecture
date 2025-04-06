@@ -31,9 +31,10 @@ class CounterView extends StatelessWidget {
                       .add(CounterIncrementPressed());
 
                   BlocProvider.of<LoggerCubit>(context).createLog(Log(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
                     title: 'Counter Incremented',
                     subtitle:
-                        'Current count: $countState\nNew count: ${countState + 1}',
+                        'Current count: $countState New count: ${countState + 1}',
                     createdAt: DateTime.now(),
                   ));
                 },
@@ -45,9 +46,10 @@ class CounterView extends StatelessWidget {
                       .add(CounterDecrementPressed());
 
                   BlocProvider.of<LoggerCubit>(context).createLog(Log(
+                    id: DateTime.now().millisecondsSinceEpoch.toString(),
                     title: 'Counter Decremented',
                     subtitle:
-                        'Current count: $countState\nNew count: ${countState - 1}',
+                        'Current count: $countState New count: ${countState - 1}',
                     createdAt: DateTime.now(),
                   ));
                 },

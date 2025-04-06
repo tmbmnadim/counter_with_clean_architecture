@@ -1,3 +1,4 @@
+import 'package:counter_pro/core/utils/custom_dialog.dart';
 import 'package:counter_pro/features/logger/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -41,8 +42,31 @@ class ViewLogsPage extends StatelessWidget {
                       Text(logger.logs[index].createdAt?.toString() ?? 'N/A'),
                   title: Text(logger.logs[index].title ?? 'Log Entry $index'),
                   subtitle: Text("${logger.logs[index].subtitle}"),
-                  onTap: () {
-                    context.read<LoggerCubit>().deleteLog(logger.logs[index]);
+                  onTap: () {},
+                  onLongPress: () {
+                    showDialog(
+                      context: context,
+                      builder: (context) => CustomDialog(
+                        title: "Delete Log?",
+                        subtitle: "Are you sure you want to delete this log?",
+                        buttonLabels: const ["Delete", "Cancel"],
+                        buttonColors: const [
+                          Colors.red,
+                          Colors.teal,
+                        ],
+                        onTap: (label) {
+                          switch (label) {
+                            case "Delete":
+                              context
+                                  .read<LoggerCubit>()
+                                  .deleteLog(logger.logs[index]);
+                              break;
+                            case "Cancel":
+                              break;
+                          }
+                        },
+                      ),
+                    );
                   },
                 ),
               );

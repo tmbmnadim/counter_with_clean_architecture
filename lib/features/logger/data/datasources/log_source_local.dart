@@ -43,12 +43,13 @@ class LogManager {
 
       // Convert to JSON and append to the log file with a newline
       final logJson = json.encode(logEntry.toJson());
-      await file.writeAsString('$logJson\n', mode: FileMode.append);
+      await file.writeAsString('$logJson\n\n', mode: FileMode.append);
 
       debugPrint(
           'Logged: ${logEntry.title ?? 'Log entry'} [${logEntry.level.toString().split('.').last}]');
     } catch (e) {
       debugPrint('Failed to write log: $e');
+      rethrow;
     }
   }
 
@@ -57,13 +58,15 @@ class LogManager {
       final file = await _getLogFile();
 
       if (!await file.exists()) {
-        return false; // No log file exists
+        throw "No log file exists"; // No log file exists
       }
 
       // Read all lines from the file
       final contents = await file.readAsString();
-      final lines =
-          contents.split('\n').where((line) => line.trim().isNotEmpty).toList();
+      final lines = contents
+          .split('\n\n')
+          .where((line) => line.trim().isNotEmpty)
+          .toList();
 
       // Filter out the log to delete
       bool logFound = false;
@@ -75,7 +78,7 @@ class LogManager {
           final currentLog = LogModel.fromJson(logJson);
 
           // If this isn't the log we want to delete, keep it
-          if (currentLog != log) {
+          if (currentLog.id != log.id) {
             updatedLines.add(line);
           } else {
             logFound = true;
@@ -88,7 +91,7 @@ class LogManager {
 
       // If we didn't find the log, nothing to delete
       if (!logFound) {
-        return false;
+        throw "Log not found"; // Log not found in the file
       }
 
       // Write the updated content back to the file
@@ -97,7 +100,7 @@ class LogManager {
       return true;
     } catch (e) {
       debugPrint('LogManager<deleteLog>: $e');
-      return false;
+      rethrow;
     }
   }
 

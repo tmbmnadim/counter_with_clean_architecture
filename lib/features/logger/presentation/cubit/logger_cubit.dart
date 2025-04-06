@@ -39,14 +39,22 @@ class LoggerCubit extends Cubit<LoggerState> {
     }
   }
 
-  void deleteLog(Log log) {
+  void deleteLog(Log log) async {
+    final List<Log> backup = [];
+    backup.addAll(state.logs);
     try {
-      final currentLogs = state.logs;
+      final List<Log> currentLogs = [];
+      currentLogs.addAll(state.logs);
       emit(LoggerLoading());
       currentLogs.removeWhere((element) => element == log);
       emit(LogDeleted(logs: currentLogs));
+      final status = await _logRepo.deleteLog(log);
+      print('status: $status');
+      if (status is ErrorOccured) {
+        emit(LoggerError(logs: backup, message: status.message));
+      }
     } catch (e) {
-      emit(LoggerError(logs: state.logs, message: e.toString()));
+      emit(LoggerError(logs: backup, message: e.toString()));
     }
   }
 

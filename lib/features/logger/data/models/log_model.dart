@@ -2,6 +2,7 @@ import 'package:counter_pro/features/logger/logger.dart';
 
 class LogModel extends Log {
   const LogModel({
+    super.id,
     super.title,
     super.subtitle,
     super.level,
@@ -13,6 +14,7 @@ class LogModel extends Log {
 
   factory LogModel.fromJson(Map<String, dynamic> json) {
     return LogModel(
+      id: json['id'],
       title: json['title'],
       subtitle: json['subtitle'],
       level: LogLevel.values.byName(json['level'] ?? "undefined"),
@@ -25,6 +27,7 @@ class LogModel extends Log {
 
   factory LogModel.fromEntity(Log log) {
     return LogModel(
+      id: log.id,
       title: log.title,
       subtitle: log.subtitle,
       level: log.level,
@@ -37,6 +40,7 @@ class LogModel extends Log {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'title': title,
       'subtitle': subtitle,
       'level': level?.name,

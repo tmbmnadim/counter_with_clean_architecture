@@ -88,6 +88,7 @@ class _CreateLogsViewState extends State<CreateLogsView> {
                         _createPressed = true;
                         // Create log
                         final log = Log(
+                          id: DateTime.now().millisecondsSinceEpoch.toString(),
                           title: _titleController.text,
                           subtitle: _subtitleController.text,
                           createdAt: DateTime.now(),
